@@ -103,7 +103,7 @@ public class Main {
 
     public static void browseFiles( Scanner scan) { 
         
-        boolean folderIsSelected;
+        boolean keepBrowsing;
         File[] directoryFiles;
         File[] displayFiles;
         File currentFolder;
@@ -118,8 +118,8 @@ public class Main {
         rootFolder = new File (musicFolderPath);
 
         do {
-            folderIsSelected = false;
-            if(currentPath.isEmpty()) { currentPath = musicFolderPath; }
+            keepBrowsing = false;
+            if(currentPath.isEmpty()) { currentPath = musicFolderPath; saveConfig(); }
             System.out.println("\n" + " File Selection " + "\n" + "----------------");
             
             currentFolder = new File (currentPath);
@@ -164,7 +164,8 @@ public class Main {
                     if("B".equalsIgnoreCase(input)) { // B will take the current path up a folder, only if its not in the setup Directory //
                         if (!currentFolder.equals(rootFolder)) { 
                             currentPath = currentFolder.getParent();
-                            folderIsSelected = true;
+                            keepBrowsing = true;
+                            saveConfig();
                         } 
                         else { break; }
                     }
@@ -178,35 +179,41 @@ public class Main {
                         if (selection < 1 || selection > displayFiles.length) { System.out.println("ERROR: Selection out of bounds! "); } 
                         else if (displayFiles[selection - 1].isDirectory()) { 
                             currentPath = displayFiles[selection - 1].getPath();
-                            folderIsSelected = true;
+                            keepBrowsing = true;
+                            saveConfig();
                         }
                     }
-                } while ((selection < 1 || selection > displayFiles.length) && !folderIsSelected); 
+                } while ((selection < 1 || selection > displayFiles.length) && !keepBrowsing); 
             } 
-        } while(folderIsSelected); 
+        
              
-        if (selection > 0 && displayFiles[selection - 1].isFile()) { // File is Selected //
-            do { 
-                System.out.print("Selected File: " + displayFiles[selection - 1].getName() + "\n" + "Q - Playback Mode, Z - Analysis Mode: "); 
-                input = scan.nextLine(); 
-                if("Q".equalsIgnoreCase(input)) { System.out.print("Playback not implemented yet!"); }
-                else if ("Z".equalsIgnoreCase(input)) { 
-                    try {
-                        AudioTrack selectedTrack = new AudioTrack( AudioFileIO.read(displayFiles[selection - 1])); 
-                        selectedTrack.DisplayInfo();
-                    } catch (Exception e) {}
-                }
-                else { 
-                    System.out.println("ERROR: Selection must either be Q or Z! "); 
-                }
-            } while (!"Q".equalsIgnoreCase(input) && !"Z".equalsIgnoreCase(input));
-        }
+            if (selection > 0 && displayFiles[selection - 1].isFile()) { // File is Selected //
+                do { 
+                    System.out.print("Selected File: " + displayFiles[selection - 1].getName() + "\n" + "Z - Analysis Mode, B - Back: "); 
+                    input = scan.nextLine(); 
+                 /* if("Q".equalsIgnoreCase(input)) { 
+                        System.out.print("Playback not implemented yet!"); 
+                    } */
+                    if ("Z".equalsIgnoreCase(input)) { 
+                        try {
+                            AudioTrack selectedTrack = new AudioTrack( AudioFileIO.read(displayFiles[selection - 1])); 
+                            selectedTrack.DisplayInfo();
+                        } catch (Exception e) {}
+                    }
+                    else if ("B".equalsIgnoreCase(input)) {
+                        keepBrowsing = true;
+                        break;
+                    }
+                    else { System.out.println("ERROR: Invalid Selection! "); }
+                } while (!"Q".equalsIgnoreCase(input) && !"Z".equalsIgnoreCase(input));
+            }
+        } while(keepBrowsing); 
     }
 
     public static void main(String[] args) {
         
         Logger.getLogger("org.jaudiotagger").setLevel(Level.OFF);
-        String versionNumber = "v0.9.0"; // Current Version //
+        String versionNumber = "v1.0.0"; // Current Version //
         Scanner scanner = new Scanner(System.in);
         boolean audianaIsRunning = true;
         loadConfig();
@@ -228,7 +235,7 @@ public class Main {
             
                 case "D": setupDirectory(scanner); saveConfig(); break;// D - Directory Setup //
         
-                case "F": browseFiles(scanner); break; // F - File Selection //
+                case "F": browseFiles(scanner); saveConfig(); break; // F - File Selection //
                 
                 case "E": saveConfig(); audianaIsRunning = false; break; // Exit - Will Terminate Application //
 
