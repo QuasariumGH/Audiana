@@ -14,8 +14,8 @@ public class AudioTrack {
     }
 
     public void DisplayInfo() {
-        System.out.println("\n" + "-- Audio Information -- ");
-        System.out.println("File Name:   " + name);
+        System.out.println(name);
+        System.out.println("---------------------------------------------------- ");
         System.out.println("Duration:    " + header.getTrackLength() + " seconds");
         System.out.println("File Size:   " + audioFile.getFile().length() + " bytes");
         System.out.println("Bitrate:     " + header.getBitRate());
