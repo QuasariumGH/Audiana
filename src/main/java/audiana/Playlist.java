@@ -1,17 +1,17 @@
 package audiana;
 
-public class Playlist {
+/* Contains the Playlist object, which stores AudioTracks into user created "Playlists" that can be sorted and managed. */
+
+public class Playlist { // Not Implamented Yet
 
     public AudioTrack[] files;
     public int size;
+    public String name;
 
-    public Playlist(AudioTrack[] files, int size)
+    public Playlist(String name, int size, AudioTrack[] files)
     {
-        this.files = files;
+        this.name = name;
         this.size = size;
-    }
-    public Playlist sort() {
-        Playlist playlist = null;
-        return playlist;
+        this.files = files;
     }
 }
