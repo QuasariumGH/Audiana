@@ -1,4 +1,4 @@
-package audiana;
+package audiana.audio;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioHeader;
 
@@ -16,6 +16,7 @@ public class AudioTrack {
     }
 
     public void DisplayInfo() {
+
         System.out.println("\n" + name);
         System.out.println("---------------------------------------------------- ");
         System.out.println("Duration:    " + (header.getTrackLength() / 60) + " Minutes, " + (header.getTrackLength() % 60) + " Seconds");
@@ -23,5 +24,6 @@ public class AudioTrack {
         System.out.println("Bitrate:     " + header.getBitRate());
         System.out.println("Sample Rate: " + header.getSampleRateAsNumber() + " Hz");
         System.out.println("Channels:    " + header.getChannels());
+        
     }
 }
